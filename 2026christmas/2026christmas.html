@@ -590,8 +590,8 @@
       }
 
       /* =======================
-     LOCK / UNLOCK SCROLL（關鍵）
-  ======================= */
+         LOCK / UNLOCK SCROLL
+      ======================= */
       function lockScroll() {
         document.body.style.overflow = "hidden";
       }
@@ -601,8 +601,8 @@
       }
 
       /* =======================
-     MENU FIX 位置（避免跳動錯）
-  ======================= */
+         MENU FIX 位置
+      ======================= */
       let menuTop = 0;
 
       function updateMenuTop() {
@@ -613,8 +613,8 @@
       window.addEventListener("resize", updateMenuTop);
 
       /* =======================
-     SCROLL
-  ======================= */
+         SCROLL
+      ======================= */
       window.addEventListener("scroll", () => {
         const scrollY = window.scrollY;
 
@@ -635,11 +635,11 @@
             menu.classList.remove("fixed");
           }
 
-          /* scroll spy */
           let current = "";
 
           sections.forEach((sec) => {
             const top = sec.offsetTop - 150;
+
             if (scrollY >= top) {
               current = "#" + sec.id;
             }
@@ -647,6 +647,7 @@
 
           cards.forEach((card) => {
             card.classList.remove("active");
+
             if (card.dataset.target === current) {
               card.classList.add("active");
             }
@@ -655,19 +656,18 @@
       });
 
       /* =======================
-     OPEN MENU
-  ======================= */
+         OPEN MENU
+      ======================= */
       hamburger.addEventListener("click", () => {
         mobileMenu.classList.add("show");
         lockScroll();
 
-        // ⭐ 關鍵：避免 header 擋住 X
         mobileHeader.classList.remove("show");
       });
 
       /* =======================
-     CLOSE MENU
-  ======================= */
+         CLOSE MENU
+      ======================= */
       function closeMenu() {
         mobileMenu.classList.remove("show");
         unlockScroll();
@@ -676,20 +676,31 @@
       closeBtn.addEventListener("click", closeMenu);
 
       mobileMenu.addEventListener("click", (e) => {
-        if (e.target === mobileMenu) closeMenu();
+        if (e.target === mobileMenu) {
+          closeMenu();
+        }
       });
 
       /* =======================
-     SMOOTH SCROLL（修正定位）
-  ======================= */
+         精準定位
+      ======================= */
       function go(target) {
         const el = document.querySelector(target);
+
         if (!el) return;
 
-        const offset = menu.classList.contains("fixed") ? 90 : 140;
+        let offset = 0;
+
+        if (isMobile()) {
+          offset = mobileHeader ? mobileHeader.offsetHeight - 25 : 0;
+        } else {
+          offset = menu ? menu.offsetHeight : 0;
+        }
+
+        const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
 
         window.scrollTo({
-          top: el.offsetTop - offset,
+          top: y,
           behavior: "smooth",
         });
 
@@ -697,8 +708,8 @@
       }
 
       /* =======================
-     MOBILE MENU LINKS
-  ======================= */
+         MOBILE MENU LINKS
+      ======================= */
       document.querySelectorAll(".mobile-menu a").forEach((a) => {
         a.addEventListener("click", (e) => {
           e.preventDefault();
@@ -707,8 +718,8 @@
       });
 
       /* =======================
-     DESKTOP CARD CLICK
-  ======================= */
+         DESKTOP CARD CLICK
+      ======================= */
       cards.forEach((card) => {
         card.addEventListener("click", () => {
           go(card.dataset.target);
@@ -716,9 +727,11 @@
       });
 
       /* =======================
-     RESIZE FIX
-  ======================= */
+         RESIZE FIX
+      ======================= */
       window.addEventListener("resize", () => {
+        updateMenuTop();
+
         if (!isMobile()) {
           mobileMenu.classList.remove("show");
           unlockScroll();
