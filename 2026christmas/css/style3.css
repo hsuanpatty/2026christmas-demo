@@ -573,6 +573,18 @@ li {
   margin-bottom: 14px;
 }
 
+.winter {
+  width: min(720px, 92%);
+  margin: auto;
+  padding: 30px 20px 40px;
+}
+
+@media (max-width: 575.98px) {
+  .winter {
+    padding: 30px 12px 40px;
+  }
+}
+
 /* =========================
    Grid
 ========================= */
